@@ -16,7 +16,7 @@ npm install
 
 ### 2. Configure environment variables
 
-Create a `.env` file in the project root (one is already provided). Make sure it contains:
+Create a `.env` file in the project root. Make sure it contains:
 
 ```env
 PORT=3000
@@ -60,11 +60,11 @@ npm test
 ```
 
 ## Implemented Features
--Login, Register, and Logout
--Course and Session Bookings
--Site Management (Add/Edit/Remove Courses and Sessions)
--User Management (Remove/Promote/Demote Users)
--JWT Authentication
+- Login, Register, and Logout
+- Course and Session Bookings
+- Site Management (Add/Edit/Remove Courses and Sessions)
+- User Management (Remove/Promote/Demote Users)
+- JWT Authentication
 
 
 
