@@ -1,14 +1,11 @@
-// controllers/bookingController.js
-import {
-  bookCourseForUser,
-  bookSessionForUser,
-} from "../services/bookingService.js";
+// controllers/bookingApiController.js
+import { bookCourseForUser, bookSessionForUser, promoteWaitlist } from "../services/bookingService.js";
 import { BookingModel } from "../models/bookingModel.js";
-import { SessionModel } from "../models/sessionModel.js";
 
 export const bookCourse = async (req, res) => {
   try {
-    const { userId, courseId } = req.body;
+    const userId = res.locals.user._id;
+    const { courseId } = req.body;
     const booking = await bookCourseForUser(userId, courseId);
     res.status(201).json({ booking });
   } catch (err) {
@@ -19,7 +16,8 @@ export const bookCourse = async (req, res) => {
 
 export const bookSession = async (req, res) => {
   try {
-    const { userId, sessionId } = req.body;
+    const userId = res.locals.user._id;
+    const { sessionId } = req.body;
     const booking = await bookSessionForUser(userId, sessionId);
     res.status(201).json({ booking });
   } catch (err) {
@@ -37,13 +35,9 @@ export const cancelBooking = async (req, res) => {
     if (!booking) return res.status(404).json({ error: "Booking not found" });
     if (booking.status === "CANCELLED") return res.json({ booking });
 
-    if (booking.status === "CONFIRMED") {
-      for (const sid of booking.sessionIds) {
-        await SessionModel.incrementBookedCount(sid, -1);
-      }
-    }
-    const updated = await BookingModel.cancel(bookingId);
-    res.json({ booking: updated });
+    const cancelled = await BookingModel.cancel(bookingId);
+    await promoteWaitlist(cancelled);
+    res.json({ booking: cancelled });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to cancel booking" });

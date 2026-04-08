@@ -78,8 +78,9 @@ import courseRoutes from "./routes/courses.js";
 import sessionRoutes from "./routes/sessions.js";
 import bookingRoutes from "./routes/bookings.js";
 import viewRoutes from "./routes/views.js";
-import { attachDemoUser } from "./middlewares/demoUser.js";
+import { attachCurrentUser } from "./middlewares/currentUser.js";
 import { initDb } from "./models/_db.js";
+import { csrfMiddleware } from "./middlewares/csrf.js";
 
 
 
@@ -107,20 +108,19 @@ app.use(cookieParser());
 // Static
 app.use("/static", express.static(path.join(__dirname, "public")));
 
-// Demo user
-app.use(attachDemoUser);
+// Attach current user from JWT to res.locals for all views
+app.use(attachCurrentUser);
 
 // Health
 app.get("/health", (req, res) => res.json({ ok: true }));
 
-// JSON API routes
-// app.use('/auth', authRoutes);
-app.use("/courses", courseRoutes);
-app.use("/sessions", sessionRoutes);
-app.use("/bookings", bookingRoutes);
+// JSON API routes (no CSRF — stateless, token-authenticated)
+app.use("/api/courses", courseRoutes);
+app.use("/api/sessions", sessionRoutes);
+app.use("/api/bookings", bookingRoutes);
 
-// SSR view routes
-app.use("/", viewRoutes);
+// SSR view routes — CSRF applies here only
+app.use("/", csrfMiddleware, viewRoutes);
 
 // Errors
 export const not_found = (req, res) =>

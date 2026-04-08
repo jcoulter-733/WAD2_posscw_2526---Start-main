@@ -1,0 +1,47 @@
+{{> head}}
+{{> header}}
+
+<article>
+  <h1>My Bookings</h1>
+
+  {{#bookings}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#list}}
+      <tr>
+        <td>{{courseTitle}}</td>
+        <td>{{type}}</td>
+        <td>{{createdAt}}</td>
+        <td>{{status}}</td>
+        <td>
+          {{#cancellable}}
+          <form method="post" action="/bookings/{{id}}/cancel">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="btn btn-danger" type="submit">Cancel</button>
+          </form>
+          {{/cancellable}}
+          {{^cancellable}}
+          <span class="muted">—</span>
+          {{/cancellable}}
+        </td>
+      </tr>
+      {{/list}}
+    </tbody>
+  </table>
+  {{/bookings}}
+
+  {{^bookings}}
+  <p>You have no bookings yet. <a href="/courses">Browse courses</a></p>
+  {{/bookings}}
+</article>
+
+{{> footer}}

@@ -1,0 +1,46 @@
+{{> head}}
+{{> header}}
+
+<article>
+  <h1>{{title}}</h1>
+  <p><a href="/manage/courses/new" class="btn btn-primary">+ Add New Class</a></p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Level</th>
+        <th>Type</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#courses}}
+      <tr>
+        <td>{{title}}</td>
+        <td>{{level}}</td>
+        <td>{{type}}</td>
+        <td>{{startDate}}</td>
+        <td>{{endDate}}</td>
+        <td>
+          <a href="/manage/courses/{{id}}/sessions" class="btn">Sessions</a>
+          <a href="/manage/courses/{{id}}/bookings" class="btn">Bookings</a>
+          <a href="/manage/courses/{{id}}/edit" class="btn">Edit</a>
+          <form method="post" action="/manage/courses/{{id}}/delete" style="display:inline;">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this class?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {{/courses}}
+    </tbody>
+  </table>
+
+  {{^courses}}
+  <p>No classes yet. <a href="/manage/courses/new">Add one</a></p>
+  {{/courses}}
+</article>
+
+{{> footer}}

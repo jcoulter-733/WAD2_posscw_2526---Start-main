@@ -1,12 +1,36 @@
 <header class="site-header">
   <div class="wrap">
-    🧘 Yoga Studio
+    <h1>🧘 Yoga Studio</h1>
     <nav>
-      <a> hrefs</a>
+      <a href="/">Home</a>
+      <a href="/courses">Classes</a>
+      {{#isInstructor}}
+      <a> | </a>
+      <a href="/manage/courses">Manage Classes</a>
+      <a href="/manage/users">Manage Users</a>
+      {{/isInstructor}}
+      {{#user}}
+      <a> | </a>
+      <a href="/bookings">My Bookings</a>
+      {{/user}}
     </nav>
     {{#user}}
     <div class="user">
-      Signed in as <strong>{{ name }}</strong>
+      <span>Welcome, <b>{{user.username}}</b> ({{user.role}})</span>     
+      <form action="/logout" method="POST" style="display: inline;">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit">Log Out</button>
+      </form>
+    </div>
+    {{/user}}
+    {{^user}}
+    <div class="user">
+      <form action="/login" method="GET" style="display: inline;">
+        <button type="submit">Sign In</button>
+      </form>
+      <form action="/register" method="GET" style="display: inline;">
+        <button type="submit">Register</button>
+      </form>
     </div>
     {{/user}}
   </div>

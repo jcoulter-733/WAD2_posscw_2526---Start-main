@@ -1,0 +1,52 @@
+{{> head}}
+{{> header}}
+
+<article>
+  <h1>{{title}}</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#users}}
+      <tr>
+        <td class="muted"><small>{{id}}</small></td>
+        <td>{{username}}</td>
+        <td>{{role}}</td>
+        <td>
+          {{#isInstructor}}
+          <form method="post" action="/manage/users/{{id}}/role" style="display:inline;">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <input type="hidden" name="role" value="student">
+            <button class="btn btn-danger" type="submit">Demote to Student</button>
+          </form>
+          {{/isInstructor}}
+          {{^isInstructor}}
+          <form method="post" action="/manage/users/{{id}}/role" style="display:inline;">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <input type="hidden" name="role" value="organiser">
+            <button class="btn btn-primary" type="submit">Promote to Organiser</button>
+          </form>
+          {{/isInstructor}}
+          <form method="post" action="/manage/users/{{id}}/delete" style="display:inline;">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="btn btn-danger" type="submit" onclick="return confirm('Remove user {{username}}?')">Remove User</button>
+          </form>
+        </td>
+      </tr>
+      {{/users}}
+    </tbody>
+  </table>
+
+  {{^users}}
+  <p class="muted">No users found.</p>
+  {{/users}}
+</article>
+
+{{> footer}}

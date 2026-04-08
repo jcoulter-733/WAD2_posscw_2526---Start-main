@@ -1,17 +1,24 @@
-
 {{> head}}
 {{> header}}
 
-<h1>Booking Confirmation</h1>
-<p>Your booking has been created.</p>
+<main class="auth-page">
+  <div class="auth-card confirmation-card">
+    <div class="confirmation-icon">&#10003;</div>
+    <h1>Booking Confirmed</h1>
+    <p class="muted">Your spot has been reserved. See you on the mat!</p>
 
-<dl class="kv">
-  <dt>ID</dt><dd>{{booking.id}}</dd>
-  <dt>Type</dt><dd>{{booking.type}}</dd>
-  <dt>Status</dt><dd>{{booking.status}}</dd>
-  <dt>Created</dt><dd>{{booking.createdAt}}</dd>
-</dl>
+    <dl class="kv confirmation-kv">
+      <dt>Booking ID</dt><dd>{{booking.id}}</dd>
+      <dt>Type</dt><dd>{{booking.type}}</dd>
+      <dt>Status</dt><dd><span class="status-badge">{{booking.status}}</span></dd>
+      <dt>Booked at</dt><dd>{{booking.createdAt}}</dd>
+    </dl>
 
-<p><a class="btn" href></p>
+    <div class="actions" style="flex-direction:column; align-items:stretch; margin-top:1.5rem;">
+      <a class="btn primary" href="/bookings" style="text-align:center;">View My Bookings</a>
+      <a class="btn" href="/courses" style="text-align:center;">Back to Courses</a>
+    </div>
+  </div>
+</main>
 
-{{>
+{{> footer}}

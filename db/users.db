@@ -1,4 +1,4 @@
-{"name":"Fiona","email":"fiona@student.local","role":"student","_id":"Ok3dWmRnSk2Jyzzo"}
-{"name":"Ava","email":"ava@yoga.local","role":"instructor","_id":"U8TysG3FXZDrEGHR"}
-{"name":"Ben","email":"ben@yoga.local","role":"instructor","_id":"YJBJbhLLCyShCCWG"}
-{"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
+{"username":"sarah","name":"Sarah Johnson","email":"sarah@student.local","password":"$2b$10$/9kN.LNMyn9yftW/zFwDd.FuNRvvAVc7x3BWXwoiPHjWO7z4BFfTu","role":"student","_id":"ZxyQBbl3kYX3P3pi"}
+{"username":"admin","name":"Admin User","email":"admin@yogastudio.local","password":"$2b$10$vnFKcBCUPzvyVOo3t5Cj/.1H9ASr/.m.1Q0ym9SWk52c5cD2AqGP2","role":"organiser","_id":"i9FA1ViatCsoJZBM"}
+{"username":"james","name":"James Patel","email":"james@student.local","password":"$2b$10$DGuVDDVy/CsQsc/5sMAFK.mVAQ0WkJaVQy2/7PCUw0MNSukgR0KHa","role":"student","_id":"p8S1neEFvhsL8Xuk"}
+{"$$indexCreated":{"fieldName":"email","unique":true,"sparse":true}}

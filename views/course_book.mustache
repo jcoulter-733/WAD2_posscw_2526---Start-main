@@ -20,8 +20,8 @@
   </div>
   {{/errors}}
 
-  <form method="post" action="/   <!-- If you add CSRF later: <input type="hidden" name="_csrf" value="{{csrfToken}}"> -->
-    <input type="hidden" name="userId" value="{{user._id}}">
+  <form method="post" action="/courses/{{course.id}}/book">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
     <fieldset>
       <legend>Your details</legend>
@@ -59,7 +59,7 @@
 
     <div class="actions">
       <button class="btn primary" type="submit">Confirm Course Booking</button>
-      /courses/{{course.id}}Cancel</a>
+      <a href="/courses/{{course.id}}">Cancel</a>
     </div>
   </form>
 </article>

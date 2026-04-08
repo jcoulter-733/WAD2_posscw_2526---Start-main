@@ -7,22 +7,47 @@
   <p class="muted">
     Level: {{course.level}} • Type: {{course.type}} {{#course.allowDropIn}}• Drop-in available{{/course.allowDropIn}}
   </p>
+  <p class="muted">Instructor: {{course.instructor}}</p>
   <p>{{course.description}}</p>
   <p class="muted">Dates: {{course.startDate}} – {{course.endDate}}</p>
+  <p class="muted">Room: {{course.room}}</p>
 
   <section>
-    <h2>Book the full course</h2>
-   <form action="/courses/{{course.id}}/book" method="post">  <!-- If you add CSRF later: <input type="hidden" name="_csrf" value="{{csrfToken}}"> -->
-      <input type="hidden" name="userId" value="{{user._id}}">
-      <button class="btn primary" type="submit">Book full course</button>
+    <h2>Full Course Booking</h2>
+    {{#course.courseBooked}}
+    <p>You have booked this full course.</p>
+    <form action="/bookings/{{course.courseBookingId}}/cancel" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button class="btn btn-danger" type="submit">Cancel Course Booking</button>
     </form>
+    {{/course.courseBooked}}
+    {{^course.courseBooked}}
+    {{#course.canBookCourse}}
+    {{#course.courseFull}}
+    <p class="muted">This course is currently full. You can join the waitlist and will be confirmed if a place becomes available.</p>
+    {{/course.courseFull}}
+    <form action="/courses/{{course.id}}/book" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      {{#course.courseFull}}
+      <button class="btn" type="submit">Join waitlist</button>
+      {{/course.courseFull}}
+      {{^course.courseFull}}
+      <button class="btn primary" type="submit">Book full course</button>
+      {{/course.courseFull}}
+    </form>
+    <p class="muted">£{{course.price}} per session × {{course.sessionsCount}} sessions = <strong>£{{course.totalPrice}}</strong></p>
+    {{/course.canBookCourse}}
+    {{^course.canBookCourse}}
+    <p class="muted">You already have session bookings for this course. Cancel them to book the full course.</p>
+    {{/course.canBookCourse}}
+    {{/course.courseBooked}}
   </section>
 
   <section>
     <h2>Sessions</h2>
     <table class="table">
       <thead>
-        <tr><th>Start</th><th>End</th><th>Capacity</th><th>Booked</th><th>Remaining</th><th></th></tr>
+        <tr><th>Start</th><th>End</th><th>Capacity</th><th>Booked</th><th>Remaining</th><th>Cost</th><th>Book</th></tr>
       </thead>
       <tbody>
         {{#sessions}}
@@ -32,15 +57,26 @@
           <td>{{capacity}}</td>
           <td>{{booked}}</td>
           <td>{{remaining}}</td>
+          <td>£{{price}}</td>
           <td>
-            {{#../course.allowDropIn}}
-            <form method="postook
+
+            {{#userBooked}}
+            <form method="post" action="/bookings/{{userBookingId}}/cancel">
+              <input type="hidden" name="_csrf" value="{{csrfToken}}">
+              <button class="btn btn-danger" type="submit">Cancel</button>
+            </form>
+            {{/userBooked}}
+            {{^userBooked}}
+            {{#allowDropIn}}
+            <form method="post" action="/sessions/{{id}}/book">
+              <input type="hidden" name="_csrf" value="{{csrfToken}}">
               <button class="btn" type="submit" {{#isFull}}disabled{{/isFull}}>Book this session</button>
             </form>
-            {{/../course.allowDropIn}}
-            {{^../course.allowDropIn}}
+            {{/allowDropIn}}
+            {{^allowDropIn}}
               <span class="muted">Drop-ins disabled</span>
-            {{/../course.allowDropIn}}
+            {{/allowDropIn}}
+            {{/userBooked}}
           </td>
         </tr>
         {{/sessions}}

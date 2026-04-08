@@ -1,0 +1,34 @@
+{{> head}}
+{{> header}}
+
+<article>
+  <h1>{{title}}</h1>
+  <p><a href="{{backHref}}">← {{backLabel}}</a></p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Type</th>
+        <th>Booked</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#bookings}}
+      <tr>
+        <td>{{username}}</td>
+        <td>{{type}}</td>
+        <td>{{createdAt}}</td>
+        <td>{{status}}</td>
+      </tr>
+      {{/bookings}}
+    </tbody>
+  </table>
+
+  {{^bookings}}
+  <p class="muted">No bookings for this class yet.</p>
+  {{/bookings}}
+</article>
+
+{{> footer}}

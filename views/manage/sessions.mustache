@@ -1,0 +1,42 @@
+{{> head}}
+{{> header}}
+
+<article>
+  <h1>{{title}}</h1>
+  <p><a href="/manage/courses">← Back to Classes</a></p>
+
+  <h2>Upcoming Sessions</h2>
+
+  {{#hasSessions}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date &amp; Time</th>
+        <th>End</th>
+        <th>Capacity</th>
+        <th>Booked</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#sessions}}
+      <tr>
+        <td>{{start}}</td>
+        <td>{{end}}</td>
+        <td>{{capacity}}</td>
+        <td>{{bookedCount}}</td>
+        <td>
+          <a href="/manage/sessions/{{id}}/bookings" class="btn">View Bookings</a>
+        </td>
+      </tr>
+      {{/sessions}}
+    </tbody>
+  </table>
+  {{/hasSessions}}
+
+  {{^hasSessions}}
+  <p class="muted">No upcoming sessions for this class.</p>
+  {{/hasSessions}}
+</article>
+
+{{> footer}}

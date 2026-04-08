@@ -1,7 +1,7 @@
 
 // routes/bookings.js
 import { Router } from 'express';
-import { bookCourse, bookSession, cancelBooking } from '../controllers/bookingController.js';
+import { bookCourse, bookSession, cancelBooking } from '../controllers/bookingApiController.js';
 
 const router = Router();
 

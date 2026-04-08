@@ -12,5 +12,5 @@ export const UserModel = {
   async findById(id) {
     return usersDb.findOne({ _id: id });
   }
-};
-``
+}
+

@@ -3,21 +3,19 @@ import { CourseModel } from "../models/courseModel.js";
 import { SessionModel } from "../models/sessionModel.js";
 import { BookingModel } from "../models/bookingModel.js";
 
-const canReserveAll = (sessions) =>
-  sessions.every((s) => (s.bookedCount ?? 0) < (s.capacity ?? 0));
-
 export async function bookCourseForUser(userId, courseId) {
   const course = await CourseModel.findById(courseId);
   if (!course) throw new Error("Course not found");
   const sessions = await SessionModel.listByCourse(courseId);
   if (sessions.length === 0) throw new Error("Course has no sessions");
 
-  let status = "CONFIRMED";
-  if (!canReserveAll(sessions)) {
-    status = "WAITLISTED";
-  } else {
-    for (const s of sessions) await SessionModel.incrementBookedCount(s._id, 1);
-  }
+  // Compute live counts for each session
+  const counts = await Promise.all(
+    sessions.map((s) => BookingModel.countConfirmedForSession(s._id))
+  );
+
+  const allAvailable = sessions.every((s, i) => counts[i] < (s.capacity ?? 0));
+  const status = allAvailable ? "CONFIRMED" : "WAITLISTED";
 
   return BookingModel.create({
     userId,
@@ -26,6 +24,37 @@ export async function bookCourseForUser(userId, courseId) {
     sessionIds: sessions.map((s) => s._id),
     status,
   });
+}
+
+export async function promoteWaitlist(cancelledBooking) {
+  const { courseId, type, sessionIds } = cancelledBooking;
+
+  if (type === "COURSE") {
+    const waitlisted = await BookingModel.findOldestWaitlisted({ courseId, type: "COURSE" });
+    if (!waitlisted) return;
+
+    // Only promote if all sessions in that booking now have capacity
+    const sessions = await Promise.all(waitlisted.sessionIds.map((id) => SessionModel.findById(id)));
+    const counts = await Promise.all(waitlisted.sessionIds.map((id) => BookingModel.countConfirmedForSession(id)));
+    const allAvailable = sessions.every((s, i) => s && counts[i] < (s.capacity ?? 0));
+
+    if (allAvailable) {
+      await BookingModel.confirm(waitlisted._id);
+    }
+  } else if (type === "SESSION") {
+    for (const sessionId of sessionIds) {
+      const session = await SessionModel.findById(sessionId);
+      if (!session) continue;
+
+      const confirmedCount = await BookingModel.countConfirmedForSession(sessionId);
+      if (confirmedCount >= (session.capacity ?? 0)) continue;
+
+      const waitlisted = await BookingModel.findOldestWaitlisted({ sessionId, type: "SESSION" });
+      if (waitlisted) {
+        await BookingModel.confirm(waitlisted._id);
+      }
+    }
+  }
 }
 
 export async function bookSessionForUser(userId, sessionId) {
@@ -40,12 +69,8 @@ export async function bookSessionForUser(userId, sessionId) {
     throw err;
   }
 
-  let status = "CONFIRMED";
-  if ((session.bookedCount ?? 0) >= (session.capacity ?? 0)) {
-    status = "WAITLISTED";
-  } else {
-    await SessionModel.incrementBookedCount(session._id, 1);
-  }
+  const confirmedCount = await BookingModel.countConfirmedForSession(sessionId);
+  const status = confirmedCount >= (session.capacity ?? 0) ? "WAITLISTED" : "CONFIRMED";
 
   return BookingModel.create({
     userId,
