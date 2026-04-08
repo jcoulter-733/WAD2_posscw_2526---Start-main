@@ -53,6 +53,10 @@ node index.js
 
 The site will be available at [http://localhost:3000](http://localhost:3000).
 
+## Deployed using Render
+
+The site has been deployed using render available at https://wad2-posscw-2526-start-main-uu45.onrender.com
+
 ## Running tests
 
 ```bash
