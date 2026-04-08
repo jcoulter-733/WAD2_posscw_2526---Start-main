@@ -60,11 +60,11 @@ npm test
 ```
 
 ## Implemented Features
-Login, Register, and Logout
-Course and Session Bookings
-Site Management (Add/Edit/Remove Courses and Sessions)
-User Management (Remove/Promote/Demote Users)
-JWT Authentication
+-Login, Register, and Logout
+-Course and Session Bookings
+-Site Management (Add/Edit/Remove Courses and Sessions)
+-User Management (Remove/Promote/Demote Users)
+-JWT Authentication
 
 
 
